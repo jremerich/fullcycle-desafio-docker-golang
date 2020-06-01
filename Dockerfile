@@ -1,4 +1,4 @@
-FROM golang:1.14.3-alpine3.11
+FROM golang:1.14.3-alpine3.11 as builder
 
 WORKDIR /go/src/app
 COPY . .
@@ -6,4 +6,7 @@ COPY . .
 RUN go get -d -v ./...
 RUN go install -v ./...
 
-CMD ["app"]
+FROM scratch
+COPY --from=builder /go/bin/app /
+
+CMD ["/app"]
